@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "243511842690",
+    "firebase_url": "https://sp2bidespus.firebaseio.com",
+    "project_id": "sp2bidespus",
+    "storage_bucket": "sp2bidespus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243511842690:android:7a4df6b3555addbcbce19b",
+        "android_client_info": {
+          "package_name": "com.example.sp2bidespus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243511842690-sp6o64k1i2fibbrku3co259r4713sll1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIiFandMSF8KYiB6xtFDNWiS4VzYyaPGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243511842690-sp6o64k1i2fibbrku3co259r4713sll1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
