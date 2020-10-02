@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:sp2bidespus/components/constant.dart';
-import 'package:sp2bidespus/components/dialog.dart';
-import 'package:sp2bidespus/components/tombolMenu.dart';
-import 'package:sp2bidespus/pages/downloadPage.dart';
-import 'package:sp2bidespus/pages/loginPage.dart';
-import 'package:sp2bidespus/pages/uploadPage.dart';
+import 'package:ps2bidespus/components/constant.dart';
+import 'package:ps2bidespus/components/dialog.dart';
+import 'package:ps2bidespus/components/tombolMenu.dart';
+import 'package:ps2bidespus/pages/downloadPage.dart';
+import 'package:ps2bidespus/pages/loginPage.dart';
+import 'package:ps2bidespus/pages/supportPage.dart';
+import 'package:ps2bidespus/pages/uploadPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     initial();
   }
@@ -75,9 +77,9 @@ class _HomePageState extends State<HomePage> {
                           ));
                         }),
                         tombolMenu(context, 'Contact', Icons.phone, Color.fromRGBO(123, 23, 244, 1), (){
-                          showDialog(
-                            context: context,
-                            builder: (_) => dialogPengembangan(context)
+                          Navigator.push(context, MaterialPageRoute(
+                            builder:  (context) => SupportPage(),
+                          ),
                           );
                         }),
                       ],
