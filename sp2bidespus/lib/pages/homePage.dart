@@ -1,10 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:sp2bidespus/components/constant.dart';
-import 'package:sp2bidespus/components/dialog.dart';
 import 'package:sp2bidespus/components/tombolMenu.dart';
 import 'package:sp2bidespus/pages/downloadPage.dart';
 import 'package:sp2bidespus/pages/loginPage.dart';
+import 'package:sp2bidespus/pages/supportPage.dart';
 import 'package:sp2bidespus/pages/uploadPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,21 +64,20 @@ class _HomePageState extends State<HomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        tombolMenu(context, 'Upload Doc', Icons.cloud_upload, Color.fromRGBO(171, 14, 21, 1), (){
+                        tombolMenu(context, 'Upload', Icons.cloud_upload, Color.fromRGBO(171, 14, 21, 1), (){
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) => UploadPage(),
                           ));
                         }),
-                        tombolMenu(context, 'Download Doc', Icons.cloud_download, Color.fromRGBO(226, 221, 18, 1), (){
+                        tombolMenu(context, 'Download', Icons.cloud_download, Color.fromRGBO(226, 221, 18, 1), (){
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) => DownloadPage(),
                           ));
                         }),
                         tombolMenu(context, 'Contact', Icons.phone, Color.fromRGBO(123, 23, 244, 1), (){
-                          showDialog(
-                            context: context,
-                            builder: (_) => dialogPengembangan(context)
-                          );
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => SupportPage()
+                          ));
                         }),
                       ],
                     ),
