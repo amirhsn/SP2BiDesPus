@@ -49,6 +49,19 @@ class _SupportPageState extends State<SupportPage>{
     }
   }
 
+  kirimPesan() async{
+    if(isiController.text == "" || emailController.text == "" || namaController.text == "" || subjekController.text == ""){
+      Fluttertoast.showToast(
+        msg: 'Harap isi semua form yag disediakan!',
+        gravity: ToastGravity.BOTTOM,
+        toastLength: Toast.LENGTH_SHORT,
+      );
+    }
+    else{
+      mail(isiController.text, emailController.text, namaController.text, subjekController.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context){
     return new Scaffold(
@@ -148,7 +161,7 @@ class _SupportPageState extends State<SupportPage>{
                           blurRadius: 5.0)]),),
                   color: Colors.pinkAccent,
                   onPressed: () {
-                    mail(isiController.text, emailController.text, namaController.text, subjekController.text);
+                    kirimPesan();
                   },
                 ),
               ],
