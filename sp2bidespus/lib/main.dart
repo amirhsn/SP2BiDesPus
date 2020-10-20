@@ -1,10 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:sp2bidespus/pages/downloadPage.dart';
 import 'package:sp2bidespus/pages/loginPage.dart';
-import 'package:sp2bidespus/pages/signUpPage.dart';
-import 'package:sp2bidespus/pages/subDownloadPage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
