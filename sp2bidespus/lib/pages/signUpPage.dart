@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:sp2bidespus/components/constant.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:sp2bidespus/pages/homePage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sp2bidespus/pages/signUpPage.dart';
 
-class LoginPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+
   final dBRef = FirebaseDatabase.instance.reference();
+  TextEditingController controllerNama = TextEditingController();
   TextEditingController controllerUsername = TextEditingController();
   TextEditingController controllerPassword = TextEditingController();
+  String nama;
   String usr;
   String pwd; 
-
-  SharedPreferences loginData;
-  bool newUser;
-
-  @override
-  void initState() {
-    super.initState();
-    loginCheck();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   AutoSizeText(
-                    'LOGIN',
+                    'DAFTAR',
                     maxLines: 1,
                     minFontSize: 30,
                     style: TextStyle(
@@ -69,19 +61,19 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               TextFormField(
                                 validator: (value) {
-                                  if (value.isEmpty){
-                                    return 'Harap diisi';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) => usr = value,
-                                controller: controllerUsername,
+                                    if (value.isEmpty){
+                                      return 'Harap diisi';
+                                    }
+                                    return null;
+                                  },
+                                onChanged: (value) => nama = value,
+                                controller: controllerNama,
                                 maxLines: 1,
                                 decoration: InputDecoration(
                                   isDense: true,
                                   fillColor: Colors.grey[100],
                                   filled: true,
-                                  hintText: 'Username',
+                                  hintText: 'Nama lengkap',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                                   ),
@@ -104,20 +96,56 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               TextFormField(
                                 validator: (value) {
-                                  if (value.isEmpty){
-                                    return 'Harap diisi';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) => pwd = value,
-                                controller: controllerPassword,
-                                obscureText: true,
+                                    if (value.isEmpty){
+                                      return 'Harap diisi';
+                                    }
+                                    return null;
+                                  },
+                                onChanged: (value) => usr = value,
+                                controller: controllerUsername,
                                 maxLines: 1,
                                 decoration: InputDecoration(
                                   isDense: true,
                                   fillColor: Colors.grey[100],
                                   filled: true,
-                                  hintText: 'Password',
+                                  hintText: 'Username',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              TextFormField(
+                                validator: (value) {
+                                    if (value.isEmpty){
+                                      return 'Harap diisi';
+                                    }
+                                    return null;
+                                  },
+                                onChanged: (value) => pwd = value,
+                                controller: controllerPassword,
+                                obscureText: true,
+                                maxLines: 1,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  fillColor: Colors.grey[100],
+                                  filled: true,
+                                  hintText: 'Password (NRPTT)',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
                                   ),
@@ -143,12 +171,16 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Positioned(
-                        bottom: screenHeight(context)*(1/25),
+                        bottom: screenHeight(context)*(1/15),
                         left: screenWidth(context)*(0.65),
                         child: FlatButton(
                           onPressed: (){
                             if (_formKey.currentState.validate()){
-                              checkingData();
+                              //dBRef.push().set({
+                              //  'nama':controllerNama.text,
+                              //  'username':controllerUsername.text,
+                              //  'password':controllerPassword.text,
+                              //});
                             }
                           },
                           child: Container(
@@ -177,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage(),));
+                      Navigator.pop(context);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -190,14 +222,14 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Belum punya akun? ',
+                            'Sudah punya akun? ',
                             style: TextStyle(
                               fontSize: screenWidth(context)*(1/25),
                               color: Colors.white,
                             ),
                           ),
                           Text(
-                            'Daftar disini',
+                            'Silahkan login',
                             style: TextStyle(
                               fontSize: screenWidth(context)*(1/25),
                               color: Colors.white,
@@ -215,93 +247,5 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
-  }
-
-  String usrDB, pwdDB;
-
-  Future<void> checkingData() async{
-    String usrDBAdmin = (await dBRef.child('login').child('admin').child('username').once()).value.toString();
-    String pwdDBAdmin = (await dBRef.child('login').child('admin').child('password').once()).value.toString();
-    String usrDBUser = (await dBRef.child('login').child(usr).child('username').once()).value.toString();
-    String pwdDBUser = (await dBRef.child('login').child(usr).child('password').once()).value.toString();
-    //Check it is admin or not?
-    if(usr == usrDBAdmin){
-      usrDB = usrDBAdmin;
-    }
-    else{
-      usrDB = usrDBUser;
-    }
-
-    if(pwd == pwdDBAdmin){
-      pwdDB = pwdDBAdmin;
-    }
-    else{
-      pwdDB = pwdDBUser;
-    }
-    //Check if usr admin but pwd not admin
-    if(usrDB == usrDBAdmin && pwdDB != pwdDBAdmin){
-      pwdDB = "";
-      Fluttertoast.showToast(
-        msg: 'Selamat Datang!',
-        backgroundColor: Colors.red[300],
-        gravity: ToastGravity.BOTTOM,
-        toastLength: Toast.LENGTH_SHORT,
-        textColor: Colors.white,
-      );
-    }
-    else if(usrDB != usrDBAdmin && pwdDB == pwdDBAdmin){
-      pwdDB = "";
-      Fluttertoast.showToast(
-        msg: 'Selamat Datang!',
-        backgroundColor: Colors.red[300],
-        gravity: ToastGravity.BOTTOM,
-        toastLength: Toast.LENGTH_SHORT,
-        textColor: Colors.white,
-      );
-    }
-
-    //Checking final login
-    if(usr == usrDB && pwd == pwdDB){
-      loginData.setBool('login', false);
-      loginData.setString('username', controllerUsername.text);
-      Fluttertoast.showToast(
-        msg: 'Selamat Datang!',
-        backgroundColor: Colors.red[300],
-        gravity: ToastGravity.BOTTOM,
-        toastLength: Toast.LENGTH_SHORT,
-        textColor: Colors.white,
-      );
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => HomePage(),
-      ));
-
-    }
-    else{
-      Fluttertoast.showToast(
-        msg: 'Username atau password salah!',
-        backgroundColor: Colors.red[300],
-        gravity: ToastGravity.BOTTOM,
-        toastLength: Toast.LENGTH_SHORT,
-        textColor: Colors.white,
-      );
-    }
-  }
-
-  void loginCheck() async{
-    loginData = await SharedPreferences.getInstance();
-    newUser = (loginData.getBool('login') ?? true);
-
-    if(newUser == false){
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => HomePage(),
-      ));
-    }
-  }
-
-  @override
-  void dispose() {
-    controllerUsername.dispose();
-    controllerPassword.dispose();
-    super.dispose();
   }
 }

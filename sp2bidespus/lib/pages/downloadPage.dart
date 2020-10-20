@@ -1,15 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 //import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:open_file/open_file.dart';
 import 'package:sp2bidespus/components/constant.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:ext_storage/ext_storage.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sp2bidespus/components/dialogInfoDownload.dart';
 import 'package:sp2bidespus/components/downloadMenuButton.dart';
+import 'package:sp2bidespus/pages/subDownloadPage.dart';
 
 class DownloadPage extends StatefulWidget {
   @override
@@ -38,30 +33,6 @@ class _DownloadPageState extends State<DownloadPage> {
   //  );
   //}
 
-  //METHOD UNTUK MEMINTA IZIN STORAGE
-  Future<void> getPermissionFix() async {
-    try {
-      PermissionStatus permission = await Permission.storage.status;
-
-      if (permission != PermissionStatus.granted) {
-        await Permission.storage.request();
-        PermissionStatus permission = await Permission.storage.status;
-
-        if (permission == PermissionStatus.granted) {
-          downloadFile();
-        } else {
-          openAppSettings();
-        }
-      } 
-      else{
-        downloadFile();
-      }     
-    } 
-    catch (e) {
-      print(e);
-    }
-  }
-
   //var dio = Dio();
 
   String anc = 'LAPORAN BULANAN ANC';
@@ -75,10 +46,6 @@ class _DownloadPageState extends State<DownloadPage> {
   String salin = 'LAPORAN PERSALINAN';
   String lansia = 'LAPORAN LANSIA';
   String tular = 'LAPORAN PENYAKIT TIDAK MENULAR';
-
-  String urlDownload;
-  String namaFileOut;
-  String pathDownload;
 
   @override
   Widget build(BuildContext context) {
@@ -136,70 +103,59 @@ class _DownloadPageState extends State<DownloadPage> {
                 child: Column(
                   children: [
                     downloadMenu(context, anc, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, anc),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: anc,
+                        judulCollection: 'laporan_anc',),));
                     }),
                     downloadMenu(context, salin, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, salin),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: salin,
+                        judulCollection: 'laporan_persalinan',),));
                     }),
                     downloadMenu(context, nifas, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, nifas),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: nifas,
+                        judulCollection: 'laporan_nifas',),));
                     }),
                     downloadMenu(context, kia, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, kia),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: kia,
+                        judulCollection: 'laporan_kia',),));
                     }),
                     downloadMenu(context, sdm, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, sdm),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: sdm,
+                        judulCollection: 'laporan_sdm',),));
                     }),
                     downloadMenu(context, kb, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, kb),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: kb,
+                        judulCollection: 'laporan_kb',),));
                     }),
                     downloadMenu(context, ibu, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, ibu),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: ibu,
+                        judulCollection: 'laporan_ibu',),));
                     }),
                     downloadMenu(context, bayi, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, bayi),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: bayi,
+                        judulCollection: 'laporan_bayi',),));
                     }),
                     downloadMenu(context, imun, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, imun),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: imun,
+                        judulCollection: 'laporan_imunisasi',),));
                     }),
                     downloadMenu(context, lansia, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, lansia),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: lansia,
+                        judulCollection: 'laporan_lansia',),));
                     }),
                     downloadMenu(context, tular, (){
-                      showDialog(
-                        context: context,
-                        builder: (_) => dialogDownload(context, tular),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubDownloadPage(
+                        judulHalaman: tular,
+                        judulCollection: 'laporan_penyakit',),));
                     }),
                   ],
                 ),
@@ -208,140 +164,6 @@ class _DownloadPageState extends State<DownloadPage> {
           ],
         ),
       ),
-    );
-  }
-
-
-  //ALERT DIALOG UNTUK MEYAKINKAN USER MENDOWNLOAD FILE ATAU TIDAK
-  Widget dialogDownload(BuildContext context, String tpp){
-    return AlertDialog(
-      content: AutoSizeText(
-        'Apakah anda yakin ingin download file?',
-        textAlign: TextAlign.center,
-      ),
-      actions: [
-        GestureDetector(
-          onTap: () async {
-            getUrl(tpp);
-            Navigator.pop(context);
-            await Fluttertoast.showToast(
-              msg: 'Silahkan cek folder Download di device anda',
-              backgroundColor: Colors.red[300],
-              gravity: ToastGravity.BOTTOM,
-              toastLength: Toast.LENGTH_SHORT,
-              textColor: Colors.white,
-              );
-          },
-          child: Text(
-            'Ya',
-            style: TextStyle(
-              color: Color.fromRGBO(171, 14, 21, 1),
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-        FlatButton(
-          onPressed: (){
-            Navigator.pop(context);
-          },
-          child: Text(
-            'Tidak',
-            style: TextStyle(
-              color: Color.fromRGBO(171, 14, 21, 1),
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-      ],
-      backgroundColor: Colors.white,
-      title: Text(
-        'Download',
-        style: TextStyle(
-          color: Colors.black,
-          letterSpacing: 1.0,
-        ),
-      ),
-    );
-  }
-
-  //ALERT DIALOG UNTUK MEMBUKA FILE HASIL DOWNLOAD
-  Widget dialogOpenFile(BuildContext context){
-    return AlertDialog(
-      content: AutoSizeText(
-        'Ingin buka file langsung?',
-        textAlign: TextAlign.center,
-      ),
-      actions: [
-        GestureDetector(
-          onTap: () async {
-            OpenFile.open(pathDownload+'/'+namaFileOut+'.docx');
-            Navigator.pop(context);
-          },
-          child: Text(
-            'Ya',
-            style: TextStyle(
-              color: Color.fromRGBO(171, 14, 21, 1),
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-        FlatButton(
-          onPressed: (){
-            Navigator.pop(context);
-          },
-          child: Text(
-            'Tidak',
-            style: TextStyle(
-              color: Color.fromRGBO(171, 14, 21, 1),
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-      ],
-      backgroundColor: Colors.white,
-      title: Text(
-        'Download selesai',
-        style: TextStyle(
-          color: Colors.black,
-          letterSpacing: 1.0,
-        ),
-      ),
-    );
-  }
-
-  //METHOD UNTUK MENDAPATKAN URL DARI FILE
-  getUrl(String tipe) async {
-    //PENUNJUK ATAU POINTER MASIH KE SATU FILE SAJA
-    String locPath = tipe+"/"+tipe+".docx";
-    StorageReference ref = 
-        FirebaseStorage.instance.ref().child(locPath);
-    String url = (await ref.getDownloadURL()).toString();
-    urlDownload = url;
-    namaFileOut = tipe;
-    //MINTA IZIN AKSES STORAGE
-    getPermissionFix();
-    //downloadFile();
-  }
-
-  //METHOD FUTURE ASYNC MASA DEPAN UNTUK MELAKUKAN DOWNLOAD FILE BILA PERMINTAAN DISETUJUI
-  void downloadFile() async{
-    pathDownload = await ExtStorage.getExternalStoragePublicDirectory(
-    ExtStorage.DIRECTORY_DOWNLOADS);
-
-    //String fullPath = '$path/'+namaFileOut+'.docx';
-    //downloadStart(dio, urlDownload, fullPath);
-    final taskId = await FlutterDownloader.enqueue(
-      url: urlDownload,
-      savedDir: pathDownload,
-      showNotification: false,
-      openFileFromNotification: false,
-      fileName: namaFileOut+".docx",
-    );
-    await FlutterDownloader.loadTasks();
-    FlutterDownloader.retry(taskId: taskId);
-    showDialog(
-      context: context,
-      builder: (_) => dialogOpenFile(context)
     );
   }
 
