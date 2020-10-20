@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sp2bidespus/components/constant.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -13,7 +14,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final dBRef = FirebaseDatabase.instance.reference();
+  final dBRef = FirebaseDatabase.instance.reference().child('login');
   TextEditingController controllerNama = TextEditingController();
   TextEditingController controllerUsername = TextEditingController();
   TextEditingController controllerPassword = TextEditingController();
@@ -110,19 +111,16 @@ class _SignUpPageState extends State<SignUpPage> {
                                   filled: true,
                                   hintText: 'Username',
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
                                   ),
                                   prefixIcon: Icon(
                                     Icons.person,
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.white,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.white,
                                     ),
@@ -175,12 +173,24 @@ class _SignUpPageState extends State<SignUpPage> {
                         left: screenWidth(context)*(0.65),
                         child: FlatButton(
                           onPressed: (){
-                            if (_formKey.currentState.validate()){
-                              //dBRef.push().set({
-                              //  'nama':controllerNama.text,
-                              //  'username':controllerUsername.text,
-                              //  'password':controllerPassword.text,
-                              //});
+                            try{
+                              if (_formKey.currentState.validate()){
+                                dBRef.push().set({
+                                  'nama':controllerNama.text,
+                                  'username':controllerUsername.text,
+                                  'password':controllerPassword.text,
+                                });
+                              }
+                              Fluttertoast.showToast(
+                                msg: 'Pendaftaran berhasil, silahkan masuk melalui menu login',
+                                gravity: ToastGravity.CENTER,
+                                toastLength: Toast.LENGTH_LONG,
+                              );
+                            }
+                            catch(e){
+                              Fluttertoast.showToast(
+                                msg: 'Sepertinya ada masalah, coba lagi nanti'
+                              );
                             }
                           },
                           child: Container(

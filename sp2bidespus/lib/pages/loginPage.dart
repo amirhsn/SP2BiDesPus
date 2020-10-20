@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:sp2bidespus/components/constant.dart';
@@ -113,11 +115,12 @@ class _LoginPageState extends State<LoginPage> {
                                 controller: controllerPassword,
                                 obscureText: true,
                                 maxLines: 1,
+                                keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   isDense: true,
                                   fillColor: Colors.grey[100],
                                   filled: true,
-                                  hintText: 'Password',
+                                  hintText: 'Password (NRPTT)',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
                                   ),
@@ -217,13 +220,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  String usrDB, pwdDB;
+  String usrDB, pwdDB, usrDBUser, pwdDBUser, nama;
 
   Future<void> checkingData() async{
     String usrDBAdmin = (await dBRef.child('login').child('admin').child('username').once()).value.toString();
     String pwdDBAdmin = (await dBRef.child('login').child('admin').child('password').once()).value.toString();
-    String usrDBUser = (await dBRef.child('login').child(usr).child('username').once()).value.toString();
-    String pwdDBUser = (await dBRef.child('login').child(usr).child('password').once()).value.toString();
+    var fetchingUserInfo = (await dBRef.child('login'));
+    fetchingUserInfo.orderByChild('username').equalTo(usr).once().then((DataSnapshot snapshot){
+      print(snapshot.value);
+      snapshot.value.forEach((key, values){
+        nama = values['nama'];
+        usrDBUser = values['username'];
+        pwdDBUser = values['password'];
+        print(pwdDBUser);
+      });
+    });
+
     //Check it is admin or not?
     if(usr == usrDBAdmin){
       usrDB = usrDBAdmin;
@@ -241,23 +253,9 @@ class _LoginPageState extends State<LoginPage> {
     //Check if usr admin but pwd not admin
     if(usrDB == usrDBAdmin && pwdDB != pwdDBAdmin){
       pwdDB = "";
-      Fluttertoast.showToast(
-        msg: 'Selamat Datang!',
-        backgroundColor: Colors.red[300],
-        gravity: ToastGravity.BOTTOM,
-        toastLength: Toast.LENGTH_SHORT,
-        textColor: Colors.white,
-      );
     }
     else if(usrDB != usrDBAdmin && pwdDB == pwdDBAdmin){
       pwdDB = "";
-      Fluttertoast.showToast(
-        msg: 'Selamat Datang!',
-        backgroundColor: Colors.red[300],
-        gravity: ToastGravity.BOTTOM,
-        toastLength: Toast.LENGTH_SHORT,
-        textColor: Colors.white,
-      );
     }
 
     //Checking final login
@@ -272,7 +270,9 @@ class _LoginPageState extends State<LoginPage> {
         textColor: Colors.white,
       );
       Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => HomePage(),
+        builder: (context) => HomePage(
+          namaUser: nama,
+        ),
       ));
 
     }
