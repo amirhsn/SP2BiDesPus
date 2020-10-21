@@ -17,8 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   final dBRef = FirebaseDatabase.instance.reference();
   TextEditingController controllerUsername = TextEditingController();
   TextEditingController controllerPassword = TextEditingController();
-  String usr;
-  String pwd; 
 
   SharedPreferences loginData;
   bool newUser;
@@ -74,7 +72,6 @@ class _LoginPageState extends State<LoginPage> {
                                   }
                                   return null;
                                 },
-                                onChanged: (value) => usr = value,
                                 controller: controllerUsername,
                                 maxLines: 1,
                                 decoration: InputDecoration(
@@ -109,7 +106,6 @@ class _LoginPageState extends State<LoginPage> {
                                   }
                                   return null;
                                 },
-                                onChanged: (value) => pwd = value,
                                 controller: controllerPassword,
                                 obscureText: true,
                                 maxLines: 1,
@@ -218,71 +214,45 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  String usrDB, pwdDB, usrDBUser, pwdDBUser, nama;
+  String usrDB, pwdDB, nama;
 
   Future<void> checkingData() async{
-    String usrDBAdmin = (await dBRef.child('login').child('admin').child('username').once()).value.toString();
-    String pwdDBAdmin = (await dBRef.child('login').child('admin').child('password').once()).value.toString();
     var fetchingUserInfo = (await dBRef.child('login'));
-    fetchingUserInfo.orderByChild('username').equalTo(usr).once().then((DataSnapshot snapshot){
+    fetchingUserInfo.orderByChild('username').equalTo(controllerUsername.text).once().then((DataSnapshot snapshot){
       print(snapshot.value);
       snapshot.value.forEach((key, values){
         nama = values['nama'];
-        usrDBUser = values['username'];
-        pwdDBUser = values['password'];
-        print(pwdDBUser);
+        usrDB = values['username'];
+        pwdDB = values['password'];
+            //Checking final login
+        if(controllerUsername.text == usrDB && controllerPassword.text == pwdDB){
+          loginData.setBool('login', false);
+          loginData.setString('username', controllerUsername.text);
+          Fluttertoast.showToast(
+            msg: 'Selamat Datang!',
+            backgroundColor: Colors.red[300],
+            gravity: ToastGravity.BOTTOM,
+            toastLength: Toast.LENGTH_SHORT,
+            textColor: Colors.white,
+          );
+          Navigator.pushReplacement(context, MaterialPageRoute(
+            builder: (context) => HomePage(
+              namaUser: nama,
+            ),
+          ));
+
+        }
+        else{
+          Fluttertoast.showToast(
+            msg: 'Username atau password salah!',
+            backgroundColor: Colors.red[300],
+            gravity: ToastGravity.BOTTOM,
+            toastLength: Toast.LENGTH_SHORT,
+            textColor: Colors.white,
+          );
+        }
       });
     });
-
-    //Check it is admin or not?
-    if(usr == usrDBAdmin){
-      usrDB = usrDBAdmin;
-    }
-    else{
-      usrDB = usrDBUser;
-    }
-
-    if(pwd == pwdDBAdmin){
-      pwdDB = pwdDBAdmin;
-    }
-    else{
-      pwdDB = pwdDBUser;
-    }
-    //Check if usr admin but pwd not admin
-    if(usrDB == usrDBAdmin && pwdDB != pwdDBAdmin){
-      pwdDB = "";
-    }
-    else if(usrDB != usrDBAdmin && pwdDB == pwdDBAdmin){
-      pwdDB = "";
-    }
-
-    //Checking final login
-    if(usr == usrDB && pwd == pwdDB){
-      loginData.setBool('login', false);
-      loginData.setString('username', controllerUsername.text);
-      Fluttertoast.showToast(
-        msg: 'Selamat Datang!',
-        backgroundColor: Colors.red[300],
-        gravity: ToastGravity.BOTTOM,
-        toastLength: Toast.LENGTH_SHORT,
-        textColor: Colors.white,
-      );
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => HomePage(
-          namaUser: nama,
-        ),
-      ));
-
-    }
-    else{
-      Fluttertoast.showToast(
-        msg: 'Username atau password salah!',
-        backgroundColor: Colors.red[300],
-        gravity: ToastGravity.BOTTOM,
-        toastLength: Toast.LENGTH_SHORT,
-        textColor: Colors.white,
-      );
-    }
   }
 
   void loginCheck() async{
@@ -291,7 +261,9 @@ class _LoginPageState extends State<LoginPage> {
 
     if(newUser == false){
       Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => HomePage(),
+        builder: (context) => HomePage(
+          namaUser: nama,
+        ),
       ));
     }
   }

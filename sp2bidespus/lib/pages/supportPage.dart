@@ -25,7 +25,7 @@ class _SupportPageState extends State<SupportPage>{
 
     final message = Message()
     ..from = Address(username)
-    ..recipients.add("dammurib6@gmail.com")//ini email abi, ke gentos wen ku email khusus nampung
+    ..recipients.add("sorayuhu7@gmail.com")//ini email abi, ke gentos wen ku email khusus nampung
     ..subject = subjekPesan
     ..html = "<h3>Keluhan dari "+namaPesan+" dengan alamat email "+emailPesan+"</h3>\n\n<p>"+isiPesan+"</p>";
 
