@@ -9,9 +9,6 @@ import 'package:sp2bidespus/pages/uploadPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
-  final String namaUser;
-
-  const HomePage({Key key, this.namaUser}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -83,16 +80,6 @@ class _HomePageState extends State<HomePage> {
                           ));
                         }),
                       ],
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Selamat datang '+widget.namaUser,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        letterSpacing: 1,
-                        fontSize: screenWidth(context)*(1/30),
-                      ),
                     ),
                   ),
                   Center(

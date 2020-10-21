@@ -229,16 +229,14 @@ class _LoginPageState extends State<LoginPage> {
           loginData.setBool('login', false);
           loginData.setString('username', controllerUsername.text);
           Fluttertoast.showToast(
-            msg: 'Selamat Datang!',
+            msg: 'Selamat datang '+nama+'!',
             backgroundColor: Colors.red[300],
             gravity: ToastGravity.BOTTOM,
-            toastLength: Toast.LENGTH_SHORT,
+            toastLength: Toast.LENGTH_LONG,
             textColor: Colors.white,
           );
           Navigator.pushReplacement(context, MaterialPageRoute(
-            builder: (context) => HomePage(
-              namaUser: nama,
-            ),
+            builder: (context) => HomePage(),
           ));
 
         }
@@ -261,9 +259,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if(newUser == false){
       Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => HomePage(
-          namaUser: nama,
-        ),
+        builder: (context) => HomePage(),
       ));
     }
   }

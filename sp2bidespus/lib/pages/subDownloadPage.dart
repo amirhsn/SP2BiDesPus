@@ -77,13 +77,16 @@ class _SubDownloadPageState extends State<SubDownloadPage> {
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index){
                 DocumentSnapshot documentSnapshot = snapshot.data.docs[index];
-                urlDownload = documentSnapshot['url'];
-                namaFileOut = widget.judulHalaman+' '+documentSnapshot['tanggal']+'.docx';
                 return GestureDetector(
                   onTap: (){
                     showDialog(
                       context: context,
-                      builder: (context) => dialogDownload(context, urlDownload),
+                      builder: (context) => dialogDownload(
+                        context, 
+                        documentSnapshot['url'], 
+                        documentSnapshot['tanggal'], 
+                        widget.judulHalaman+' '+documentSnapshot['tanggal']+'.docx'
+                      ),
                     );
                   },
                   child: Container(
@@ -137,10 +140,12 @@ class _SubDownloadPageState extends State<SubDownloadPage> {
   
   //==================================================================================
   //ALERT DIALOG UNTUK MEYAKINKAN USER MENDOWNLOAD FILE ATAU TIDAK
-  Widget dialogDownload(BuildContext context, String tpp){
+  Widget dialogDownload(BuildContext context, String tpp, String tgl, String fileName){
+    urlDownload = tpp;
+    namaFileOut = fileName;
     return AlertDialog(
       content: AutoSizeText(
-        'Apakah anda yakin ingin download file?',
+        'Apakah anda yakin ingin download file per tanggal '+tgl+'?',
         textAlign: TextAlign.center,
       ),
       actions: [
